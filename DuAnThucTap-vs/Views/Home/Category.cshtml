@@ -1,4 +1,5 @@
 ﻿@model DuAnThucTap_vs.Models.Category
+
 @{
     ViewData["Title"] = Model.CategoryName;
 }
@@ -7,94 +8,83 @@
     <link rel="stylesheet" href="~/assets/css/detail.css" asp-append-version="true" />
 }
 
-
-<div class="app">
-
+<div class="cate">
     <!-- BANNER -->
     <section class="category-banner">
         <div class="banner-overlay"></div>
         <div class="banner-content">
             <h1>@Model.CategoryName</h1>
-            
+            <p>Thiết bị y tế cao cấp nhập khẩu chính hãng - Chất lượng Đức & Châu Âu</p>
         </div>
     </section>
 
     <!-- CONTENT -->
     <main class="product-category">
         <div class="container">
+            <!-- Header với breadcrumb + nút quay lại -->
+            <div class="page-header">
+                <nav class="breadcrumb">
+                    <a href="/">Trang chủ</a>
+                    <span>›</span>
+                    <span class="active">@Model.CategoryName</span>
+                </nav>
 
-            <!-- FILTER (optional – tạm để UI) -->
+                <a href="javascript:history.back()" class="btn-back">
+                    ← Quay lại
+                </a>
+            </div>
+
+            <!-- FILTER -->
             <div class="category-filter">
                 <button class="active" data-filter="all">Tất cả</button>
-
                 @foreach (var b in Model.Products
                                 .Where(p => p.Brand != null)
                                 .Select(p => p.Brand)
                                 .GroupBy(b => b.BrandId)
                                 .Select(g => g.First()))
                 {
-                    <button data-filter="@b.BrandId">
-                        @b.BrandName
-                    </button>
+                    <button data-filter="@b.BrandId">@b.BrandName</button>
                 }
-
             </div>
 
             <!-- GRID -->
             <section class="products">
                 <div class="products-container">
                     <div class="product-grid">
-
-                        @if (Model.Products == null || Model.Products.Count == 0)
+                        @if (Model.Products == null || !Model.Products.Any())
                         {
                             <div class="no-product">
                                 <i class="fa-solid fa-box-open"></i>
                                 <h3>Chưa có sản phẩm</h3>
-                                <p>
-                                    Danh mục <strong>@Model.CategoryName</strong> hiện chưa có sản phẩm.
-                                </p>
+                                <p>Danh mục <strong>@Model.CategoryName</strong> hiện chưa có sản phẩm nào.</p>
+                                <a href="/Contact" class="btn-contact">Liên hệ tư vấn</a>
                             </div>
                         }
                         else
                         {
-
                             @foreach (var p in Model.Products)
                             {
-                                <div class="product-card"
-                                     data-category="@p.BrandId">
-
+                                <div class="product-card" data-brand="@(p.Brand?.BrandId ?? 0)">
                                     <a href="/Product/Detail/@p.ProductId" class="product-image">
-                                        <img src="~/assets/img/@p.ImageUrl"
-                                             alt="@p.ProductName" />
-
-                                        <span class="brand-tag">
-                                            @p.Brand?.BrandName
-                                        </span>
+                                        <img src="~/assets/img/@p.ImageUrl" alt="@p.ProductName" loading="lazy" />
+                                        @if (p.Brand != null)
+                                        {
+                                            <span class="brand-tag">@p.Brand.BrandName</span>
+                                        }
                                     </a>
-
                                     <div class="product-content">
                                         <h3>@p.ProductName</h3>
-
-                                        <p class="product-meta">
-                                            @Model.CategoryName
-                                        </p>
-
-                                        <a href="/Product/Detail/@p.ProductId"
-                                           class="btn-detail">
-                                            Xem chi tiết
-                                            <i class="fa-solid fa-arrow-right"></i>
+                                        <p class="product-meta">@Model.CategoryName</p>
+                                        <a href="/Product/Detail/@p.ProductId" class="btn-detail">
+                                            Xem chi tiết <i class="fa-solid fa-arrow-right-long"></i>
                                         </a>
                                     </div>
                                 </div>
                             }
                         }
-
                     </div>
                 </div>
             </section>
-
         </div>
     </main>
-
 </div>
-

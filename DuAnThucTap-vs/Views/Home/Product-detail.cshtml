@@ -1,40 +1,82 @@
 ﻿@model DuAnThucTap_vs.Models.Product
+
 @{
     ViewData["Title"] = Model.ProductName;
 }
+
 @section Styles {
     <link rel="stylesheet" href="~/assets/css/project-detail.css" asp-append-version="true" />
 }
 
 <section class="product-detail-page">
     <div class="container">
+        <!-- Header với breadcrumb + nút quay lại -->
+        <div class="page-header">
+            <nav class="breadcrumb">
+                <a href="/">Trang chủ</a>
+                <span>›</span>
+                <a href="javascript:history.back()">@Model.Category.CategoryName</a>
+                <span>›</span>
+                <span class="active">@Model.ProductName</span>
+            </nav>
+
+            <a href="javascript:history.back()" class="btn-back">
+                ← Quay lại
+            </a>
+        </div>
 
         <div class="product-detail-layout">
-
-            <!-- ẢNH -->
+            <!-- Ảnh sản phẩm chính (hiển thị lớn, chuyên nghiệp) -->
             <div class="product-detail-img">
-                <img src="~/assets/img/@Model.ImageUrl" alt="@Model.ProductName" />
+                <div class="img-wrapper">
+                    <img src="~/assets/img/@Model.ImageUrl"
+                         alt="@Model.ProductName"
+                         class="main-product-img" />
+                </div>
             </div>
 
-            <!-- THÔNG TIN -->
+            <!-- Thông tin chi tiết -->
             <div class="product-detail-info">
                 <h1>@Model.ProductName</h1>
 
-                <ul>
-                    <li><strong>Hãng sản xuất:</strong> @Model.Brand.BrandName</li>
-                    <li><strong>Danh mục:</strong> @Model.Category.CategoryName</li>
-                </ul>
+                <div class="product-meta">
+                    <div class="meta-item">
+                        <strong>Hãng sản xuất:</strong>
+                        <span>@Model.Brand.BrandName</span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>Danh mục:</strong>
+                        <span>@Model.Category.CategoryName</span>
+                    </div>
+                    <div class="meta-item">
+                        <strong>Xuất xứ:</strong>
+                        <span>Đức</span> <!-- Có thể lấy từ DB nếu có trường Country -->
+                    </div>
+                    <div class="meta-item">
+                        <strong>Tình trạng:</strong>
+                        <span class="import-status">Nhập khẩu theo đơn hàng - Liên hệ để báo giá & thời gian giao</span>
+                    </div>
+                </div>
+
+                <!-- Phần giá: Không hiển thị số cụ thể, chỉ kêu gọi liên hệ -->
+                <div class="product-price-section">
+                    <span class="price-contact">Liên hệ để nhận báo giá tốt nhất</span>
+                </div>
 
                 <div class="product-desc">
                     @Html.Raw(Model.Description)
                 </div>
 
-                <a href="/Contact" class="btn-contact">
-                    Liên hệ tư vấn
-                </a>
+                <!-- Các nút hành động mạnh mẽ hơn -->
+                <div class="product-actions">
+                    <a href="/Contact?product=@Model.ProductId" class="btn-contact primary">
+                        Yêu cầu báo giá & Tư vấn kỹ thuật
+                    </a>
+                    <a href="/Contact?product=@Model.ProductId&demo=true" class="btn-contact secondary">
+                        Đặt lịch demo sản phẩm
+                    </a>
+                </div>
             </div>
-
         </div>
-
     </div>
 </section>
